@@ -1,19 +1,55 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img alt="Vue logo" src="./assets/logo.png" />
+    <h1>Crear nueva tarea</h1>
+    <h2>{{errorMessage}}</h2>
+    <label for="tarea">Tarea</label>
+    <input
+      type="text"
+      id="tarea"
+      v-model="newTask"
+      placeholder="Ingresa una nueva tarea"
+    />
+    <button @click="addTask" class="btn-1">Crear</button>
+    <HelloWorld msg="Listas" :tasks="tasks" @del="deleteTask"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
-  name: 'App',
+  name: "App",
+  data() {
+    return {
+      newTask: "",
+      tasks: [],
+      errorMessage: "",
+    };
+  },
   components: {
-    HelloWorld
-  }
-}
+    HelloWorld,
+  },
+  methods: {
+addTask() {
+            if (this.newTask == "") return false
+            
+            let lowerTasks = this.tasks.map((task) =>
+                task.toLowerCase().replace(" ", "")
+            );
+            if (!lowerTasks.includes(this.newTask.toLowerCase().replace(" ", ""))) {
+                this.tasks.push(this.newTask);
+                this.errorMessage = "";
+            } else {
+                this.errorMessage = "La tarea ya existe";
+            }
+            this.newTask = "";
+    },
+    deleteTask(index){
+      this.tasks.splice(index,1);
+    }
+  },
+};
 </script>
 
 <style>
